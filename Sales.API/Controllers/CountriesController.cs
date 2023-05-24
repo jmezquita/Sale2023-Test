@@ -5,8 +5,8 @@ using Sales.Shared.Entities;
 
 namespace Sales.Api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("/api/countries")]
     public class CountriesController:ControllerBase
     {
         private readonly DataContext _Context;
@@ -15,7 +15,6 @@ namespace Sales.Api.Controllers
         {
             _Context = context;
         }
-
 
         /// <summary>
         /// Get contries Async Data
