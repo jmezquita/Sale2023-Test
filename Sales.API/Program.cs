@@ -25,4 +25,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
+//add intruccion to consumer enpoint to blazor proyect
+app.UseCors(c => c
+.AllowAnyMethod()
+.AllowAnyHeader()
+.SetIsOriginAllowed(origin => true)
+.AllowCredentials());
+
+
+
 app.Run();
