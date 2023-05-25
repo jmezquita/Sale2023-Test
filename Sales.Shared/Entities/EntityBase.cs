@@ -14,7 +14,6 @@ namespace Sales.Shared.Entities
         /// </summary>
         public int Id { get; set; }
 
-        [NotMapped]
-        public abstract string EndpoinName { get; }
+
     }
 }
