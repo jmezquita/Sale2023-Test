@@ -1,12 +1,4 @@
-﻿using Sales.Shared.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sales.Web.Repositories
+﻿namespace Sales.Web.Repositories
 {
     public interface IRepository
     {
@@ -15,7 +7,7 @@ namespace Sales.Web.Repositories
         /// </summary>
         /// <typeparam name="controllerName"></typeparam>
         /// <returns></returns>
-        Task<HttpResponseWrapper<T>> GetItemsAsync<T>(string controllerName) ;
+        Task<HttpResponseWrapper<T>> GetItemsAsync<T>(string url);
 
 
         /// <summary>
@@ -25,7 +17,37 @@ namespace Sales.Web.Repositories
         /// <param name="controllerName"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<HttpResponseWrapper<T>> GetItemByIdAsync<T>(string controllerName, int id);
+        Task<HttpResponseWrapper<T>> GetItemByIdAsync<T>(string url, int id);
+
+
+        /// <summary>
+        /// Insert New Item
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="controllerName"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<HttpResponseWrapper<object>> PostAsync<T>(string url, T model);
+
+
+        /// <summary>
+        ///  Insert New Item
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="controllerName"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<HttpResponseWrapper<TResponse>> PostAsync<T, TResponse>(string url, T model);
+
+        /// <summary>
+        /// Delete a current item
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<HttpResponseWrapper<object>> DeleteAsync(string url, int id);
+
 
 
         /// <summary>
@@ -35,7 +57,7 @@ namespace Sales.Web.Repositories
         /// <param name="controllerName"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<HttpResponseWrapper<object>> PostAsync<T>(string controllerName, T model) ;
+        Task<HttpResponseWrapper<object>> PutAsync<T>(string url, T model);
 
 
         /// <summary>
@@ -46,6 +68,7 @@ namespace Sales.Web.Repositories
         /// <param name="controllerName"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<HttpResponseWrapper<TResponse>> PostAsync<T, TResponse>(string controllerName, T model);
+        Task<HttpResponseWrapper<TResponse>> PutAsync<T, TResponse>(string url, T model);
+
     }
 }

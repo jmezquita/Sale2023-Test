@@ -1,13 +1,14 @@
 ﻿@page "/countries"
 
 @inject IRepository _Repository
+@inject SweetAlertService _SweetAlertService
+@inject NavigationManager _NavigationManager
 
 <h3>Paises</h3>
 
+<a class="btn btn-primary mb-3" href="/countries/create">Nuevo</a>
+
 <GenericListComponent Items="Countries">
-    <Loading>
-        <p>Cargado...</p>
-    </Loading>
     <Body>
         <table class="table table-striped">
             <thead>
@@ -21,9 +22,8 @@
                 {
                     <tr>
                         <td>
-                            @*<a class="btn btn-warning">Editar</a>*@
-                            <button class="btn btn-warning">Editar</button>
-                            <button class="btn btn-danger">Borrar</button>
+                            <a class="btn btn-warning" href="countries/edit/@country.Id">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DelecteAsync(country.Id))>Borrar</button>
                         </td>
 
                         <td>@country.Name</td>
@@ -42,8 +42,54 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await OnloadAsync();
+
+    }
+
+    private async Task OnloadAsync()
+    {
         var _reponse = await _Repository.GetItemsAsync<List<Country>>("countries");
         Countries = _reponse.Response;
+    }
+
+    private async Task DelecteAsync(int Id)
+    {
+
+
+
+        var _result = await _SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "Deseas Borrar Este Registros",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
+
+            });
+
+        if (_result.IsConfirmed)
+        {
+
+
+            var _responseHttp = await _Repository.DeleteAsync("countries", Id);
+            if (_responseHttp.Error)
+            {
+                if (_responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
+                {
+                    var _message = await _responseHttp.GetErrorMessageAsync();
+                    await _SweetAlertService.FireAsync("Oops", _message, SweetAlertIcon.Error);
+                    return;
+                }
+            }
+            else
+            {
+                await OnloadAsync();
+            }
+        }
+        return;
+
+
 
     }
 }
