@@ -40,21 +40,57 @@ namespace Sales.Api.Controllers
         public async Task<ActionResult> PostAsync(Country country)
         {
 
-            _Context.Add(country);
-            await _Context.SaveChangesAsync();
+            try
+            {
 
-            return Ok(country);
+                _Context.Add(country);
+                await _Context.SaveChangesAsync();
+
+                return Ok(country);
+            }
+            catch (DbUpdateException upex)
+            {
+
+                if (upex.InnerException!.Message.Contains("duplicada"))
+                {
+                    return BadRequest("Ya existe un pais con el mismo nombre.");
+                }
+
+                return BadRequest(upex.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPut]
         public async Task<ActionResult> PutAsync(Country country)
         {
 
-      
-            _Context.Update(country);
-            await _Context.SaveChangesAsync();
+            try
+            {
+                _Context.Update(country);
+                await _Context.SaveChangesAsync();
 
-            return Ok(country);
+                return Ok(country);
+            }
+            catch (DbUpdateException updEx)
+            {
+                if (updEx.InnerException!.Message.Contains("duplicada"))
+                {
+                    return BadRequest("Ya existe un pais con el mismo nombre.");
+                }
+
+                return BadRequest(updEx.Message);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -67,7 +103,7 @@ namespace Sales.Api.Controllers
                 _Context.Remove(_country);
                 await _Context.SaveChangesAsync();
             }
-          return NoContent();   
+            return NoContent();
         }
 
     }
